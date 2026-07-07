@@ -108,7 +108,7 @@ x_l = np.arange(1,201)
 
 save_dict = json.load(open(exp3_name+".json", "r"))
 first = 200
-for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01"]):
+for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01", "opt-001", "opt-0001"]):
     mean = np.array(save_dict[algo])[:first]
     ax[0][0].plot(x_l[3:first], mean[3:first], label=labelize(algo), linestyle=linestyles[j%len(linestyles)], color=colors[j%len(colors)])
 
@@ -120,11 +120,11 @@ ax[0][0].set_yscale('log')
 
 save_dict = json.load(open(exp1_name+".json", "r"))
 first = 200
-for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01"]):
+for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01", "opt-001", "opt-0001"]):
     mean = 1-np.array(save_dict[algo])[:first]
     ax[0][1].plot(x_l[3:first], mean[3:first], label=labelize(algo), linestyle=linestyles[j%len(linestyles)], color=colors[j%len(colors)])
 
-ax[0][1].legend()
+ax[0][1].legend(loc='lower left')
 ax[0][1].set_ylabel(r"Type II error")
 ax[0][1].set_xlabel(r"Watermarked text length")
 ax[0][1].set_yscale('log')
