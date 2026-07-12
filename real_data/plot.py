@@ -19,12 +19,15 @@ plt.rcParams.update({
 size = "1p3"
 temp = 0.1
 seed = 111
+c = 4
+m = 200
+T = 500
 
 print(size)
-exp1_name = f"results_data/{size}B-gumbel-c4-m200-T500-skipgram_prf-{seed}-temp{temp}-result"
-exp3_name = f"results_data/{size}B-gumbel-c4-m200-T500-skipgram_prf-{seed}-temp{temp}-null"
-exp2_name = f"results_data/{size}B-transform-c4-m200-T500-skipgram_prf-{seed}-temp{temp}-result"
-exp4_name = f"results_data/{size}B-transform-c4-m200-T500-skipgram_prf-{seed}-temp{temp}-null"
+exp1_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-result"
+exp3_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-null"
+exp2_name = f"results_data/{size}B-transform-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-result"
+exp4_name = f"results_data/{size}B-transform-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-null"
 K = 1000
 alpha = 0.05
 
@@ -104,10 +107,10 @@ colors = [  "tab:blue", "tab:orange", "tab:gray","tab:red","black", "tab:brown",
 
 
 fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10,6))
-x_l = np.arange(1,201)
+x_l = np.arange(1, m+1)
 
 save_dict = json.load(open(exp3_name+".json", "r"))
-first = 200
+first = m
 for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01", "opt-001", "opt-0001"]):
     mean = np.array(save_dict[algo])[:first]
     ax[0][0].plot(x_l[3:first], mean[3:first], label=labelize(algo), linestyle=linestyles[j%len(linestyles)], color=colors[j%len(colors)])
@@ -119,7 +122,7 @@ ax[0][0].set_yscale('log')
 
 
 save_dict = json.load(open(exp1_name+".json", "r"))
-first = 200
+first = m
 for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01", "opt-001", "opt-0001"]):
     mean = 1-np.array(save_dict[algo])[:first]
     ax[0][1].plot(x_l[3:first], mean[3:first], label=labelize(algo), linestyle=linestyles[j%len(linestyles)], color=colors[j%len(colors)])
@@ -134,11 +137,11 @@ linestyles = ["-", ":","--", "-."]
 colors = [  "tab:blue", "tab:orange", "tab:gray","tab:red","black", "tab:brown", "tab:purple",   "tab:pink",]
 
 
-x_ll = np.arange(1, 201)
+x_ll = np.arange(1, m+1)
 save_dict = json.load(open(exp4_name+".json", "r"))
 for j, algo in enumerate([ "dif","dif-opt-01", "dif-opt-001","dif-opt-0001"]):
     mean = np.array(save_dict[algo])
-    ax[1][0].plot(x_ll[3:200], mean[3:200], label=labelize_inv(algo), linestyle=linestyles[j%5],color=colors[j%8])
+    ax[1][0].plot(x_ll[3:first], mean[3:first], label=labelize_inv(algo), linestyle=linestyles[j%5],color=colors[j%8])
 
 ax[1][0].axhline(y=0.05, color="black", linestyle="dotted")
 ax[1][0].set_ylabel(r"Type I error")
@@ -149,7 +152,7 @@ ax[1][0].set_yscale('log')
 save_dict = json.load(open(exp2_name+".json", "r"))
 for j, algo in enumerate([ "dif","dif-opt-01", "dif-opt-001","dif-opt-0001"]):
     mean = 1-np.array(save_dict[algo])
-    ax[1][1].plot(x_ll[:200], mean[:200], label=labelize_inv(algo), linestyle=linestyles[j%5],color=colors[j%8])
+    ax[1][1].plot(x_ll[:first], mean[:first], label=labelize_inv(algo), linestyle=linestyles[j%5],color=colors[j%8])
 
 ax[1][1].legend()
 ax[1][1].set_ylabel(r"Type II error")
@@ -158,4 +161,4 @@ ax[1][1].set_yscale('log')
 
 
 plt.tight_layout()
-plt.savefig(f'real-data-{size}-{temp}.pdf', dpi=300)
+plt.savefig(f'real-data-{size}-{c}-{m}-{T}-{temp}.pdf', dpi=300)
