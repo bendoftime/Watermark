@@ -17,11 +17,11 @@ plt.rcParams.update({
 
 
 size = "1p3"
-temp = 0.1
-seed = 111
 c = 4
 m = 200
 T = 500
+seed = 111
+temp = 0.1
 
 print(size)
 exp1_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-result"
@@ -161,4 +161,4 @@ ax[1][1].set_yscale('log')
 
 
 plt.tight_layout()
-plt.savefig(f'real-data-{size}-{c}-{m}-{T}-{temp}.pdf', dpi=300)
+plt.savefig(f'real-data-{size}B-c{c}-m{m}-T{T}-temp{temp}.pdf', dpi=300)
