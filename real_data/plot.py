@@ -20,14 +20,15 @@ size = "1p3"
 c = 4
 m = 200
 T = 500
+prf = "skipgram_prf"
 seed = 111
 temp = 0.1
 
 print(size)
-exp1_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-result"
-exp3_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-null"
-exp2_name = f"results_data/{size}B-transform-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-result"
-exp4_name = f"results_data/{size}B-transform-c{c}-m{m}-T{T}-skipgram_prf-{seed}-temp{temp}-null"
+exp1_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-{prf}-{seed}-temp{temp}-result"
+exp3_name = f"results_data/{size}B-gumbel-c{c}-m{m}-T{T}-{prf}-{seed}-temp{temp}-null"
+exp2_name = f"results_data/{size}B-transform-c{c}-m{m}-T{T}-{prf}-{seed}-temp{temp}-result"
+exp4_name = f"results_data/{size}B-transform-c{c}-m{m}-T{T}-{prf}-{seed}-temp{temp}-null"
 K = 1000
 alpha = 0.05
 
@@ -161,4 +162,4 @@ ax[1][1].set_yscale('log')
 
 
 plt.tight_layout()
-plt.savefig(f'real-data-{size}B-c{c}-m{m}-T{T}-temp{temp}.pdf', dpi=300)
+plt.savefig(f'real-data-{size}B-c{c}-m{m}-T{T}-{prf}-temp{temp}.pdf', dpi=300)
