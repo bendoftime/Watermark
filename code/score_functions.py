@@ -103,7 +103,7 @@ def h_ind(Ys, ind_delta=0.5, alpha=0.05):
 
 
 def h_opt_gum(Ys, delta0=0.2,theo=True, alpha=0.05):
-# 实现论文定理 3.2 针对 Gumbel-max 推导出的理论最优得分函数。
+# 实现论文定理 3.2 针对 Gumbel-max 推导出的在给定efficiency class和论文效率准则下最优得分函数。
     # Compute critical values
     Ys = np.array(Ys)
     check_points = np.arange(1, 1+Ys.shape[-1])

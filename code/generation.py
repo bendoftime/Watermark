@@ -70,8 +70,7 @@ def generate_gum(model,prompts,vocab_size,m,key_func,sampler, Y_func, key=23333,
                 # 当生成第二个词时，如果没有 KV Cache，模型需要重新计算 101 个词的注意力，这会导致严重的重复计算（复杂度呈平方级增长）。
                 # 使用了 KV Cache 后，代码执行 output = model(inputs[:, -1:], past_key_values=past, ...)。
                 # 注意 inputs[:, -1:] 的切片操作：它表示只截取序列的最后一个词（即上一轮刚刚生成的新词）输入给模型。
-                # 模型拿到这个单词后，只需计算这一个词的 Query 向量，然后将其与之前缓存的（past）历史 Key 和 Value 矩阵进行注意力点积运算。
-                # 这使得每一步的时间复杂度被压缩到了O(1)（相对于序列长度），极大地加速了生成过程。
+                # 模型拿到这个单词后，只需计算这一个词的 Query 向量，然后将其与之前缓存的（past）历史 Key 和 Value 矩阵进行注意力点积运算，加速了生成过程。
             else:
                 output = model(inputs)
                 # 当生成第一个词时，past 为 None。此时代码执行 output = model(inputs)。

@@ -11,7 +11,7 @@ def seed_rng(generator, tokens, seeding_scheme="minhash_prf", hash_key=15485863,
     assert tokens.shape[-1] >= c, f"seeding_scheme={seeding_scheme} requires at least a {c} token prefix sequence to seed rng"
     prf_key = prf_lookup[seeding_scheme](tokens[0][-c:], salt_key=hash_key)
     generator.manual_seed(prf_key)
-    # 将上一步计算得到的伪随机密钥强制设定为生成器的种子。这保证了只要前 c 个词和密钥相同，接下来生成的随机数就完全一致。
+    # 将上一步计算得到的伪随机密钥强制设定为生成器的种子。这保证了只要最近 c 个 token和密钥相同，接下来生成的随机数就完全一致。
 
 
 ## For Gumbel-max watermarks

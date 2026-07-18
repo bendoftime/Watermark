@@ -51,7 +51,9 @@ print(args)
 t0 = time()
 # 记录当前时间，用于后续计算模型加载花了多少秒。
 torch.manual_seed(args.seed)
-# 设置 PyTorch 的全局随机种子，确保后续在相同的设置下能够生成一模一样的结果。
+# 设置 PyTorch 的全局随机种子，确保后续在相同的设置下能够生成近乎一模一样的结果。
+# 但是注意：NumPy 的蒙特卡洛阈值没有设种子，GPU 算子、依赖版本和流式数据顺序也可能影响结果。
+# 所以并不是完全一模一样的结果。
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # 检查当前环境是否有可用的 Nvidia GPU，如果有就使用第一块 GPU ("cuda:0")，否则退回到 CPU 计算。
 
@@ -104,6 +106,7 @@ buffer_tokens = args.buffer_tokens
 # buffer_tokens 的核心作用是为了应对文本在“解码再重新分词（Retokenization）”时造成的长度缩水问题，而特意设置的“冗余/安全余量”。
 # 在代码和实验设计中，它的作用体现在应对 BPE 分词算法的“合并缩水”效应
 # 这是论文作者在附录 D.2 中专门提到的一个技术细节。
+# （但与这份代码的实际行为不一致。代码没有解码、重新分词或 padding；它只是为 null 样本生成 220 个 token，而检测只使用前 200 个，因此额外 20 个 token 实际被丢弃。）
 # 大模型的 Token 与人类阅读的单词并不是绝对的 1:1 映射。分词器（Tokenizer）使用的是子词（Subword）机制。
 # 生成阶段：大模型可能生成了两个独立的 Token，例如 [" water", "melon"]。当实验把生成的 Token ID 转换回人类可读的字符串并保存到硬盘时，它变成了 " watermelon"。
 # 检测阶段：当后续运行水印检测脚本时，检测程序需要把字符串 " watermelon" 重新输入给分词器转换成 Token。
@@ -171,7 +174,8 @@ while itm < T:
     # 调用大语言模型的Tokenizer，将输入的原始新闻文本 text 切割成Token，并将每个词元映射为模型词汇表中对应的整数 ID（例如把 "apple" 转换为 1523）。
     # return_tensors='pt' 表示返回的结果是 PyTorch 张量格式，这是因为后续输入给深度学习模型的数据必须是 PyTorch 张量格式。
     # truncation=True 表示如果文本长度超过了指定的最大长度 max_length，就会自动截断，确保不会超出模型的输入限制。
-    # max_length=2048-buffer_tokens 是为了确保即便在生成阶段多生成 buffer_tokens 个 Token，整个输入序列的长度也不会超过模型的最大输入限制（通常是 2048 个 Token）。
+    # max_length=2048-buffer_tokens 将候选 C4 文档最多截断到 2048-buffer_tokens 个 token。
+    # 注意：后续实际只提取 prompt_tokens 个 token 作为模型输入，因此在当前实现中，这并不是必要的上下文长度保护。
     if len(tokens) < prompt_tokens + new_tokens:
     # 如果当前文章的 Token 数量不足以提供至少 prompt_tokens 个提示词和 new_tokens 个生成词元，就直接跳过这篇文章，继续抽取下一篇。
         continue
