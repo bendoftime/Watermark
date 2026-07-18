@@ -175,7 +175,8 @@ while itm < T:
     # return_tensors='pt' 表示返回的结果是 PyTorch 张量格式，这是因为后续输入给深度学习模型的数据必须是 PyTorch 张量格式。
     # truncation=True 表示如果文本长度超过了指定的最大长度 max_length，就会自动截断，确保不会超出模型的输入限制。
     # max_length=2048-buffer_tokens 将候选 C4 文档最多截断到 2048-buffer_tokens 个 token。
-    # 注意：后续实际只提取 prompt_tokens 个 token 作为模型输入，因此在当前实现中，这并不是必要的上下文长度保护。
+    # 注意：后续实际只提取 prompt_tokens 个 token 作为模型输入，因此在当前实现中，这并不是上下文长度保护。
+    # 而是决定从文档的哪个位置截取。这里默认右截断，对于长文本配合prompt_tokens的选取方式，更容易能截取到正文部分。
     if len(tokens) < prompt_tokens + new_tokens:
     # 如果当前文章的 Token 数量不足以提供至少 prompt_tokens 个提示词和 new_tokens 个生成词元，就直接跳过这篇文章，继续抽取下一篇。
         continue
