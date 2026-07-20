@@ -203,12 +203,18 @@ top_one_axes = [ax[0][2], ax[1][2]]
 
 for axis, (method, title, color) in zip(top_one_axes, top_one_methods):
     top_one_probs = load_top_one_probabilities(method)
-    axis.hist(top_one_probs, bins=top_one_bins, color=color)
+    weights = np.ones_like(top_one_probs) / top_one_probs.size
+    axis.hist(
+        top_one_probs,
+        bins=top_one_bins,
+        weights=weights,
+        color=color
+    )
     axis.set_title(title)
     axis.set_xlabel(r"$\max_{w\in\mathcal{W}} P_{t,w}$")
     axis.set_xlim(0.0, 1.0)
     axis.set_yscale("log")
-    axis.set_ylabel("Empirical frequency")
+    axis.set_ylabel("Empirical proportion")
 
 
 plt.tight_layout()
