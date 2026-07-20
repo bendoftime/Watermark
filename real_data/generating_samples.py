@@ -71,7 +71,7 @@ print(f'Loaded the model (t = {time()-t0} seconds)')
 print()
 print("The vocabulary size is", vocab_size)
 print()
-dataset = load_dataset("allenai/c4", "realnewslike", split="train", streaming=True)
+dataset = load_dataset("lavita/ChatDoctor-HealthCareMagic-100k", split="train", streaming=True)
 
 T = args.T                                    # number of prompts/generations
 n_batches = int(np.ceil(T / args.batch_size)) # number of batches
@@ -121,7 +121,14 @@ prompts = []
 itm = 0
 while itm < T:
     example = next(ds_iterator)
-    text = example['text']
+    patient = example["input"]
+    doctor = example["output"]
+    if not isinstance(patient, str) or not isinstance(doctor, str):
+        continue
+    if not patient.strip() or not doctor.strip():
+        continue
+
+    text = f"Patient: {patient}\nDoctor: {doctor}"
 
     tokens = tokenizer.encode(text, return_tensors='pt', truncation=True, max_length=2048-buffer_tokens)[0]
     if len(tokens) < prompt_tokens + new_tokens:
