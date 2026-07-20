@@ -68,6 +68,7 @@ def inverse_permutation(perm):
 def transform_sampling(probs,pi,xi):
     inv_pi = inverse_permutation(pi.squeeze()).unsqueeze(0)
     cdf = torch.cumsum(torch.gather(probs, 1, inv_pi), 1)
+    cdf[:, -1] = 1.0
     s = torch.gather(inv_pi, 1, torch.searchsorted(cdf, xi))
     return s
 

@@ -95,6 +95,8 @@ def inverse_permutation(perm):
 def transform_sampling(probs,pi,xi):
     inv_pi = inverse_permutation(pi.squeeze()).unsqueeze(0)
     cdf = torch.cumsum(torch.gather(probs, 1, inv_pi), 1)
+    cdf[:, -1] = 1.0
+    # 修改了原代码，避免浮点误差导致 cdf 最后一项略小于 1，继而报错。
     s = torch.gather(inv_pi, 1, torch.searchsorted(cdf, xi))
     return s
 
