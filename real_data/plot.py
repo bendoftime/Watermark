@@ -120,6 +120,7 @@ ax[0][0].axhline(y=0.05, color="black", linestyle="dotted")
 ax[0][0].set_ylabel(r"Type I error")
 ax[0][0].set_xlabel(r"Unwatermarked text length")
 ax[0][0].set_yscale('log')
+ax[0][0].legend(loc='best')
 
 
 save_dict = json.load(open(exp1_name+".json", "r"))
@@ -128,7 +129,6 @@ for j, algo in enumerate(["ars", "log", "ind-1/e", "opt-01", "opt-001", "opt-000
     mean = 1-np.array(save_dict[algo])[:first]
     ax[0][1].plot(x_l[3:first], mean[3:first], label=labelize(algo), linestyle=linestyles[j%len(linestyles)], color=colors[j%len(colors)])
 
-ax[0][1].legend(loc='lower left')
 ax[0][1].set_ylabel(r"Type II error")
 ax[0][1].set_xlabel(r"Watermarked text length")
 ax[0][1].set_yscale('log')
@@ -148,6 +148,7 @@ ax[1][0].axhline(y=0.05, color="black", linestyle="dotted")
 ax[1][0].set_ylabel(r"Type I error")
 ax[1][0].set_xlabel(r"Unwatermarked text length")
 ax[1][0].set_yscale('log')
+ax[1][0].legend(loc='best')
 
 
 save_dict = json.load(open(exp2_name+".json", "r"))
@@ -155,7 +156,6 @@ for j, algo in enumerate([ "dif","dif-opt-01", "dif-opt-001","dif-opt-0001"]):
     mean = 1-np.array(save_dict[algo])
     ax[1][1].plot(x_ll[:first], mean[:first], label=labelize_inv(algo), linestyle=linestyles[j%5],color=colors[j%8])
 
-ax[1][1].legend()
 ax[1][1].set_ylabel(r"Type II error")
 ax[1][1].set_xlabel(r"Watermarked text length")
 ax[1][1].set_yscale('log')
